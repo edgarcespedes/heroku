@@ -13,11 +13,37 @@ app.use (bodyparser.urlencoded({
 
 );
 
-// app.use(
-//     session({
-//   secret: 'node'  
-// }));
+   app.use(session({
+      secret: 'node'  
+  }));
+
+// configuracion de ejs  template engine
+app.set('view engine', 'ejs');
+
+app.use('/public', express.static('public'));
+
+let tareas = ['uno','dos'];
+
+app.get('/',function(request, response){
+    response.render('formulario.ejs',{
+        tareas
+    });
+});
+
+app.post('/adicionar', function(request, response){
+       let tarea = request.body.nuevatarea;
+       tareas.push(tarea);
+       response.redirect('/');
+});
+
+//eliminar tareas
+
+app.get('/borrar/:id', function(request,response){
+ let id = +request.params.id;
+tareas.splice(id,1);
+response.redirect('/');
+})
 
 app.listen(port, function(){
-    console.log('escuhcando el puerto', port);
+    console.log('escuchando el puerto', port);
 });
